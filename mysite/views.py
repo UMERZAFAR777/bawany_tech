@@ -15,7 +15,7 @@ def index(request):
     slider = Slider.objects.all().order_by('-id')
     main_category = Main_Category.objects.all()
     top_deals = Product.objects.filter(section__name="Top Deals Of The Day")
-    top_featured = Product.objects.filter(section__name="Top Featured Products")
+    top_featured = Product.objects.filter(section__name="Top Featured Products").order_by('-id')
     top_selling = Product.objects.filter(section__name="Top Selling Products")
     data = {
         'slider':slider,
