@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 # @login_required(login_url = '/login/')
 
 
@@ -129,3 +131,70 @@ def contact(request):
 
 def about(request):
     return render (request,'about.html')
+
+
+
+
+
+
+
+# def filter_data(request):
+#     categories = request.GET.getlist('category[]')
+#     brands = request.GET.getlist('brand[]')
+
+#     print("Received Categories:", categories)  # ✅ Check received categories
+#     print("Received Brands:", brands)  # ✅ Check received brands
+
+#     all_products = Product.objects.filter(
+#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+#     )
+
+#     if categories:
+#         all_products = all_products.filter(category__id__in=categories)
+
+#     if brands:
+#         all_products = all_products.filter(brand__id__in=brands)
+
+#     print("Filtered Products Count:", all_products.count())  # ✅ Check how many products are found
+#     print("Filtered Products:", list(all_products.values()))  # ✅ See which products are found
+
+#     # Render the product HTML template
+#     html_content = render_to_string('ajax/shop.html', {'product': all_products})
+
+#     return JsonResponse({'data': html_content})
+
+
+
+from django.core.paginator import Paginator
+
+def filter_data(request):
+    categories = request.GET.getlist('category[]')
+    brands = request.GET.getlist('brand[]')
+
+    all_products = Product.objects.filter(
+        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+    )
+
+    if categories:
+        all_products = all_products.filter(category__id__in=categories)
+
+    if brands:
+        all_products = all_products.filter(brand__id__in=brands)
+
+    # Pagination (Jab products filter ho jayein)
+    paginator = Paginator(all_products, 8)  # 10 products per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # Render the product HTML template
+    html_content = render_to_string('ajax/shop.html', {'page_obj': page_obj})
+
+    return JsonResponse({'data': html_content})
+
+
+
+
+
+
+
+

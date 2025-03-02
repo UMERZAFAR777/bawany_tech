@@ -40,6 +40,17 @@ urlpatterns = [
     path('shop/',views.shop,name='shop'),
     path('contact/',views.contact,name='contact'),
     path('about/',views.about,name='about'),
+
+
+
+
+
+    path('shop/filter-data',views.filter_data,name="filter-data"),
+
+
+
+
+
 ]
 
 
