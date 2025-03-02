@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator
 # @login_required(login_url = '/login/')
 
 
@@ -110,9 +110,15 @@ def shop(request):
     section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
     ).order_by('-id')
 
+    paginator = Paginator(all_products, 8) 
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     data = {
         'category':category,
         'all_products':all_products,
+        'page_obj':page_obj,
     }
 
     return render (request,'shop.html',data)
