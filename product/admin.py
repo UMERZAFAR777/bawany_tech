@@ -10,9 +10,10 @@ class Additional_Informations(admin.TabularInline):
 
 class Product_Admin(admin.ModelAdmin):
     inlines = (Product_Images, Additional_Informations)
-    list_display = ('category', 'original_price', 'total_price', 'section')
-    list_display_links = ('category',) 
+    list_display = ('product_name', 'category', 'original_price', 'total_price', 'section') 
+    list_display_links = ('product_name',) 
     list_editable = ('original_price', 'total_price', 'section') 
+
 
 
 admin.site.register(Section)

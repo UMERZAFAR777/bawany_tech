@@ -1,3 +1,10 @@
+{% if page_obj|length < 1 %}
+
+
+<img src="/static/assets/images.png" height="500px" alt="">
+
+{% else %}
+
 {% for i in page_obj %}
 
 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
@@ -9,7 +16,7 @@
                 </a>
             </div>
             <div class="product-action">
-                <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId-{{forloop.counter}}">
+                <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId-{{ i.id }}">
                     <i class="fal fa-eye"></i>
                     <i class="fal fa-eye"></i>
                 </a>
@@ -49,3 +56,4 @@
 </div>
 
 {% endfor %}
+{% endif %}

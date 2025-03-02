@@ -33,7 +33,8 @@ class Product(models.Model):
     section = models.ForeignKey(Section, on_delete=models.DO_NOTHING)
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
 
-
+    def __str__(self):
+        return self.product_name
 
     def clean(self):
         
@@ -45,8 +46,7 @@ class Product(models.Model):
             if self.discount is not None or self.total_price is not None:
                 raise ValidationError("Only original price should be set for products in sections other than 'Top Deals Of The Day'.")
 
-    def __str__(self):
-        return self.product_name
+    
     
     def get_absolute_url(self):
         from django.urls import reverse

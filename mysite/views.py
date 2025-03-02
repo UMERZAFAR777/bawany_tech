@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.db.models import Max, Min
 # @login_required(login_url = '/login/')
 
 
@@ -106,24 +107,76 @@ def register(request):
         return redirect('login') 
    
 
+# def shop(request):
+#     category = Category.objects.all()
+#     all_products = Product.objects.filter(
+#     section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+#     ).order_by('-id')
+
+#     paginator = Paginator(all_products, 8) 
+
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+
+
+#     min_price = Product.objects.all().aggregate(Min('original_price'))
+#     max_price = Product.objects.all().aggregate(Max('original_price'))
+#     FilterPrice = request.GET.get('FilterPrice')
+#     if FilterPrice:
+#         Int_FilterPrice = int(FilterPrice)
+#         all_products = Product.objects.filter(original_price__lte = Int_FilterPrice)
+#     else:
+#         all_products = Product.objects.all()
+
+
+#     data = {
+#         'category':category,
+#         'all_products':all_products,
+#         'all_products':page_obj,
+#         'page_obj':page_obj,
+#         'min_price':min_price,
+#         'max_price':max_price,
+#         'FilterPrice':FilterPrice,
+#     }
+
+#     return render (request,'shop.html',data)
+
+
 def shop(request):
     category = Category.objects.all()
     all_products = Product.objects.filter(
-    section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
     ).order_by('-id')
 
-    paginator = Paginator(all_products, 8) 
+    min_price = Product.objects.aggregate(Min('original_price'))
+    max_price = Product.objects.aggregate(Max('original_price'))
 
+    # Get filter price from request
+    FilterPrice = request.GET.get('FilterPrice')
+
+    # Apply filter if price is provided
+    if FilterPrice:
+        try:
+            Int_FilterPrice = int(FilterPrice)
+            all_products = all_products.filter(original_price__lte=Int_FilterPrice)  # ✅ Apply filter on existing query
+        except ValueError:
+            pass  # If invalid input, ignore filter
+
+    # Apply pagination AFTER filtering
+    paginator = Paginator(all_products, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     data = {
-        'category':category,
-        'all_products':all_products,
-        'page_obj':page_obj,
+        'category': category,
+        'all_products': page_obj,  # ✅ Pass paginated objects
+        'page_obj': page_obj,
+        'min_price': min_price,
+        'max_price': max_price,
+        'FilterPrice': FilterPrice,
     }
 
-    return render (request,'shop.html',data)
+    return render(request, 'shop.html', data)
 
 
 def contact(request):
@@ -135,33 +188,6 @@ def about(request):
 
 
 
-
-
-
-# def filter_data(request):
-#     categories = request.GET.getlist('category[]')
-#     brands = request.GET.getlist('brand[]')
-
-#     print("Received Categories:", categories)  # ✅ Check received categories
-#     print("Received Brands:", brands)  # ✅ Check received brands
-
-#     all_products = Product.objects.filter(
-#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-#     )
-
-#     if categories:
-#         all_products = all_products.filter(category__id__in=categories)
-
-#     if brands:
-#         all_products = all_products.filter(brand__id__in=brands)
-
-#     print("Filtered Products Count:", all_products.count())  # ✅ Check how many products are found
-#     print("Filtered Products:", list(all_products.values()))  # ✅ See which products are found
-
-#     # Render the product HTML template
-#     html_content = render_to_string('ajax/shop.html', {'product': all_products})
-
-#     return JsonResponse({'data': html_content})
 
 
 
