@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from slider.models import Slider
 from app.models import Main_Category
 from product.models import Product,Section
@@ -21,12 +21,21 @@ def index(request):
     return render (request,'index.html',data)
 
 
+def product_detail(request,slug):
+    product = Product.objects.filter(slug = slug)
+
+    if product.exists():
+        product = Product.objects.get(slug = slug)
+    else:
+        return redirect ('error404')    
+    return render (request,'product/product_detail.html',{'product':product})
 
 
 
 
+def error404(request):
 
-
+    return render (request,'error/error404.html')
 
 
 

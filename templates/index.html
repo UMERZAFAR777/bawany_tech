@@ -1,4 +1,6 @@
-{% include 'header.html' %}
+{% extends 'base.html' %}
+
+{% block content %}
 
 <main>
 
@@ -123,7 +125,8 @@
                             <div class="product__item swiper-slide">
                                 <div class="product__thumb fix">
                                     <div class="product-image w-img">
-                                        <a href="product-details.html">
+                                        <a href="{{i.get_absolute_url}}">
+                                            
                                             <img style="height: 350px; width: 450px;" src="{{i.img}}" alt="product">
                                         </a>
                                     </div>
@@ -1769,4 +1772,4 @@
     {% endfor %}
 </main>
 
-{% include 'footer.html' %}
+{% endblock %}
