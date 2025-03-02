@@ -72,12 +72,12 @@ def login_user(request):
             return redirect('index')
         else:
             messages.error(request, "Incorrect email/username or password, please try again!")
-            return redirect('account')  
+            return redirect('login')  
 
 def logout_user(request):
     logout(request,)
     messages.success(request, "Logout Successfully")
-    return redirect('account')  
+    return redirect('login')  
 
    
 
@@ -90,18 +90,18 @@ def register(request):
        
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken...!')
-            return redirect('account')  
+            return redirect('login')  
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already taken...!')
-            return redirect('account')  
+            return redirect('login')  
 
         
         user = User.objects.create_user(username=username, email=email, password=password)
 
         messages.success(request, 'Registered Successfully! Please login.')
 
-        return redirect('account') 
-    return render(request, 'account/my_account.html')
+        return redirect('login') 
+   
 
 

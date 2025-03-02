@@ -48,7 +48,7 @@
                 <div class="col-lg-6">
                     <div class="basic-login mb-50">
                         <h5>Login</h5>
-                        <form action="{% url 'login' %}" method="POST">
+                        <form action="{% url 'handlelogin' %}" method="POST">
                             {% csrf_token %}
                             <label for="name">Username or email address <span>*</span></label>
                             <input id="name" type="text" name="user_input" placeholder="Enter Username">
@@ -57,7 +57,7 @@
                             <div class="login-action mb-10 fix">
 
                                 <span class="forgot-login f-right">
-                                    <a href="#">Lost your password?</a>
+                                    <a href="{% url 'password_reset' %}">Lost your password?</a>
                                 </span>
                             </div>
                             <button type="submit" style="
@@ -78,7 +78,7 @@
                 <div class="col-lg-6">
                     <div class="basic-login">
                         <h5>Register</h5>
-                        <form action="{% url 'register' %}" method="POST">
+                        <form action="{% url 'handleregister' %}" method="POST">
                             {% csrf_token %}
                             <label for="username">Username <span>*</span></label>
                             <input id="username" type="text" name="username" placeholder="Enter Username">

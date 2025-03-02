@@ -362,7 +362,7 @@
                             <div class="header-action">
                                 {% if user.is_authenticated %}
                                 <div class="block-userlink">
-                                    <a class="icon-link icon-link-2" href="{% url 'logout' %}">
+                                    <a class="icon-link icon-link-2" href="{% url 'handlelogout' %}">
                                         <i class="flaticon-user"></i>
                                         <span class="text">
                                             <span class="sub">Logout </span>
@@ -371,7 +371,7 @@
                                 </div>
                                 {% else %}
                                 <div class="block-userlink">
-                                    <a class="icon-link icon-link-2" href="{% url 'account' %}">
+                                    <a class="icon-link icon-link-2" href="{% url 'login' %}">
                                         <i class="flaticon-user"></i>
                                         <span class="text">
                                             <span class="sub">Login </span>
