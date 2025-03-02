@@ -270,16 +270,25 @@
                         <div class="col-xl-6 col-lg-7">
                             <div class="header-inner-start">
                                 <div class="header__currency border-right">
+                                    {% if user.is_authenticated %}
+                                    {% if user.username == " " %}
+
                                     <div class="s-name">
-                                        <span>Language: English </span>
+                                        <span>{{user.email}} </span>
                                     </div>
-
+                                    {% else %}
+                                    <div class="s-name">
+                                        <span>{{user.username|title}} </span>
+                                    </div>
+                                    {% endif %}
+                                    {% else %}
+                                    <div class="s-name">
+                                        <span>Please Login First.... (*!*) </span>
+                                    </div>
+                                    {% endif %}
                                 </div>
 
-                                <div class="support d-none d-sm-block">
-                                    <p>Need Help? <a href="/static/tel:+001123456789">
-                                            +(92) 332 200 2687</a></p>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-5 d-none d-lg-block">
@@ -345,14 +354,25 @@
                         </div>
                         <div class="col-xl-4 col-lg-5 col-md-8 col-sm-8">
                             <div class="header-action">
+                                {% if user.is_authenticated %}
                                 <div class="block-userlink">
-                                    <a class="icon-link icon-link-2" href="/static/my-account.html">
+                                    <a class="icon-link icon-link-2" href="{% url 'logout' %}">
+                                        <i class="flaticon-user"></i>
+                                        <span class="text">
+                                            <span class="sub">Logout </span>
+                                            My Account </span>
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div class="block-userlink">
+                                    <a class="icon-link icon-link-2" href="{% url 'account' %}">
                                         <i class="flaticon-user"></i>
                                         <span class="text">
                                             <span class="sub">Login </span>
                                             My Account </span>
                                     </a>
                                 </div>
+                                {% endif %}
                                 <div class="block-wishlist action">
                                     <a class="icon-link icon-link-2" href="/static/wishlist.html">
                                         <i class="flaticon-heart"></i>

@@ -24,6 +24,13 @@ urlpatterns = [
     path('',views.index,name='index'),
     path('product/<slug:slug>',views.product_detail,name='product_detail'),
     path('error404/',views.error404,name='error404'),
+
+
+
+    path('account/',views.account,name='account'),
+    path('logout/',views.logout_user,name='logout'),
+    path('login/',views.login_user,name='login'),
+    path('register',views.register,name='register'),
 ]
 
 
