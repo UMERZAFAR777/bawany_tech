@@ -506,14 +506,14 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a href="{% url 'index' %}" class="active">Home</a>
+                                            <a href="{% url 'index' %}" class="">Home</a>
 
                                         </li>
-                                        <li><a href="about.html">About Us</a></li>
-                                        <li class="has-mega"><a href="shop.html">Shop</a>
+                                        <li><a href="{% url 'about' %}">About Us</a></li>
+                                        <li class="has-mega"><a href="{% url 'shop' %}">Shop</a>
 
                                         </li>
-                                        <li><a href="blog.html">Contact Us</a>
+                                        <li><a href="{% url 'contact' %}">Contact Us</a>
 
                                         </li>
 
@@ -538,78 +538,17 @@
         <nav id="mobile-menu-2">
             <ul>
                 <li>
-                    <a href="/static/index.html" class="active">Home <i class="far fa-angle-down"></i></a>
-                    <ul class="megamenu-1">
-                        <li><a href="/static/index.html">Home Pages</a>
-                            <ul class="mega-item">
-                                <li><a href="/static/index.html">Home One</a></li>
-                                <li><a href="/static/index-2.html">Home Two</a></li>
-                                <li><a href="/static/index-3.html" class="active">Home Three</a></li>
-                                <li><a href="/static/product-details.html">Shop 3 Column</a></li>
-                                <li><a href="/static/product-details.html">Shop 4 Column</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/static/shop.html">Product Pages</a>
-                            <ul class="mega-item">
-                                <li><a href="/static/product-details.html">Product Details</a></li>
-                                <li><a href="/static/product-details.html">Product V2</a></li>
-                                <li><a href="/static/product-details.html">Product V3</a></li>
-                                <li><a href="/static/product-details.html">Varriable Product</a></li>
-                                <li><a href="/static/product-details.html">External Product</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/static/shop.html">Other Pages</a>
-                            <ul class="mega-item">
-                                <li><a href="/static/product-details.html">wishlist</a></li>
-                                <li><a href="/static/product-details.html">Shopping Cart</a></li>
-                                <li><a href="/static/product-details.html">Checkout</a></li>
-                                <li><a href="/static/product-details.html">Login</a></li>
-                                <li><a href="/static/product-details.html">Register</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/static/shop.html">Phone &amp; Tablets</a>
-                            <ul class="mega-item">
-                                <li><a href="/static/product-details.html">Catagory 1</a></li>
-                                <li><a href="/static/product-details.html">Catagory 2</a></li>
-                                <li><a href="/static/product-details.html">Catagory 3</a></li>
-                                <li><a href="/static/product-details.html">Catagory 4</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/static/shop.html">Phone &amp; Tablets</a>
-                            <ul class="mega-item">
-                                <li><a href="/static/product-details.html">Catagory 1</a></li>
-                                <li><a href="/static/product-details.html">Catagory 2</a></li>
-                                <li><a href="/static/product-details.html">Catagory 3</a></li>
-                                <li><a href="/static/product-details.html">Catagory 4</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <a href="{% url 'index' %}" class="active">Home <i class="far fa-angle-down"></i></a>
+                    
                 </li>
-                <li><a href="/static/about.html">About Us</a></li>
-                <li><a href="/static/shop.html">Shop <i class="far fa-angle-down"></i></a>
-                    <ul class="submenu">
-                        <li><a href="/static/shop.html">shop</a></li>
-                        <li><a href="/static/shop-details.html">Shop Details</a></li>
-                    </ul>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'shop' %}">Shop <i class="far fa-angle-down"></i></a>
+                   
                 </li>
-                <li><a href="/static/blog.html">Blog <i class="far fa-angle-down"></i></a>
-                    <ul class="submenu">
-                        <li><a href="/static/blog.html">Blog</a></li>
-                        <li><a href="/static/blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
+                
                 <li>
-                    <a href="/static/about.html">Pages <i class="far fa-angle-down"></i></a>
-                    <ul class="submenu">
-                        <li><a href="/static/my-account.html">My Account</a></li>
-                        <li><a href="/static/product-details.html">Product Details</a></li>
-                        <li><a href="/static/faq.html">FAQs pages</a></li>
-                        <li><a href="/static/cart.html">Cart</a></li>
-                        <li><a href="/static/wishlist.html">Wishlist</a></li>
-                        <li><a href="/static/checkout.html">Checkout</a></li>
-                        <li><a href="/static/contact.html">Contact Us</a></li>
-                        <li><a href="/static/404.html">404 Error</a></li>
-                    </ul>
+                    <a href="{% url 'contact' %}">Contact <i class="far fa-angle-down"></i></a>
+                    
                 </li>
             </ul>
         </nav>

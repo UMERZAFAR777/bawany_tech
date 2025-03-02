@@ -6,17 +6,17 @@ from product.models import Product,Section
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-
-
+# @login_required(login_url = '/login/')
 
 
 def index(request):
     slider = Slider.objects.all().order_by('-id')
     main_category = Main_Category.objects.all()
-    top_deals = Product.objects.filter(section__name="Top Deals Of The Day")
+    top_deals = Product.objects.filter(section__name="Top Deals Of The Day").order_by('-id')
     top_featured = Product.objects.filter(section__name="Top Featured Products").order_by('-id')
-    top_selling = Product.objects.filter(section__name="Top Selling Products")
+    top_selling = Product.objects.filter(section__name="Top Selling Products").order_by('-id')
     data = {
         'slider':slider,
         'main_category':main_category,
@@ -104,4 +104,12 @@ def register(request):
         return redirect('login') 
    
 
+def shop(request):
+    return render (request,'shop.html')
 
+
+def contact(request):
+    return render (request,'contact.html')
+
+def about(request):
+    return render (request,'about.html')
