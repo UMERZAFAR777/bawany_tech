@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from slider.models import Slider
-from app.models import Main_Category
+from app.models import Main_Category,Category,Sub_Category
 from product.models import Product,Section
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
@@ -105,7 +105,17 @@ def register(request):
    
 
 def shop(request):
-    return render (request,'shop.html')
+    category = Category.objects.all()
+    all_products = Product.objects.filter(
+    section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+    ).order_by('-id')
+
+    data = {
+        'category':category,
+        'all_products':all_products,
+    }
+
+    return render (request,'shop.html',data)
 
 
 def contact(request):
