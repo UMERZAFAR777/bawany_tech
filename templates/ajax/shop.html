@@ -5,6 +5,12 @@
 
 {% else %}
 
+{% block script %}
+
+
+
+
+{% endblock %}
 
 
 {% for i in page_obj %}
@@ -19,14 +25,8 @@
             </div>
             <div class="product-action">
              
-                <a href="#" class="icon-box icon-box-1">
-                    <i class="fal fa-heart"></i>
-                    <i class="fal fa-heart"></i>
-                </a>
-                <a href="#" class="icon-box icon-box-1">
-                    <i class="fal fa-layer-group"></i>
-                    <i class="fal fa-layer-group"></i>
-                </a>
+              
+            
             </div>
         </div>
         <div class="product__content-3">
@@ -50,3 +50,6 @@
 
 {% endfor %}
 {% endif %}
+
+
+

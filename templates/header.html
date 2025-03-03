@@ -382,15 +382,15 @@
                                             {% for i in main_category %}
 
                                             <li>
-                                                <a href="shop.html">{{i.name}} <i class="far fa-angle-down"></i></a>
+                                                <a href="{% url 'shop' %}">{{i.name}} <i class="far fa-angle-down"></i></a>
                                                 <ul class="mega-menu">
 
                                                     {% for x in i.category_set.all %}
 
-                                                    <li><a href="shop.html">{{x.name}}</a>
+                                                    <li><a href="{% url 'shop' %}">{{x.name}}</a>
                                                         {% for y in x.sub_category_set.all %}
                                                         <ul class="mega-item">
-                                                            <li><a href="product-details.html">{{y.name}}</a></li>
+                                                            <li><a href="{% url 'shop' %}">{{y.name}}</a></li>
 
                                                         </ul>
                                                         {% endfor %}

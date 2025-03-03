@@ -204,6 +204,42 @@ def cart_detail(request):
 
 
 
+# def shop(request):
+#     category = Category.objects.all()
+#     all_products = Product.objects.filter(
+#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+#     ).order_by('-id')
+
+#     min_price = Product.objects.aggregate(Min('original_price'))
+#     max_price = Product.objects.aggregate(Max('original_price'))
+
+   
+#     search_query = request.GET.get('search_query', '') 
+#     if search_query:
+#         all_products = all_products.filter(product_name__icontains=search_query)
+
+   
+#     paginator = Paginator(all_products, 8)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+
+#     if request.user.is_authenticated:
+#         wishlist_items = Wishlist.objects.filter(user=request.user)
+#         products = [item.product for item in wishlist_items]
+#     else:
+#         products = []
+#     data = {
+#         'category': category,
+#         'all_products': page_obj,
+#         'page_obj': page_obj,
+#         'min_price': min_price,
+#         'max_price': max_price,
+#         'FilterPrice': Filter,
+#         'search_query': search_query,
+#         'products':products,
+#     }
+
+#     return render(request, 'shop.html', data)
 def shop(request):
     category = Category.objects.all()
     all_products = Product.objects.filter(
@@ -213,12 +249,18 @@ def shop(request):
     min_price = Product.objects.aggregate(Min('original_price'))
     max_price = Product.objects.aggregate(Max('original_price'))
 
-    # ✅ Search Query Handle karna
-    search_query = request.GET.get('search_query', '')  # Make sure frontend bhi yahi bhej raha ho
+    # Fetch the FilterPrice from the URL
+    filter_price = request.GET.get('FilterPrice')
+    
+    # Apply price filter if FilterPrice exists and is not None
+    if filter_price and filter_price != 'None':  # Check if the value is not 'None'
+        filter_price = int(filter_price)
+        all_products = all_products.filter(original_price__lte=filter_price)
+
+    search_query = request.GET.get('search_query', '') 
     if search_query:
         all_products = all_products.filter(product_name__icontains=search_query)
 
-    # ✅ Pagination ko filter hone ke baad apply karein
     paginator = Paginator(all_products, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -228,18 +270,20 @@ def shop(request):
         products = [item.product for item in wishlist_items]
     else:
         products = []
+    
     data = {
         'category': category,
         'all_products': page_obj,
         'page_obj': page_obj,
         'min_price': min_price,
         'max_price': max_price,
-        'FilterPrice': request.GET.get('FilterPrice'),
+        'FilterPrice': filter_price,  # Passing the FilterPrice here
         'search_query': search_query,
-        'products':products,
+        'products': products,
     }
 
     return render(request, 'shop.html', data)
+
 
 
 
@@ -261,6 +305,10 @@ def filter_data(request):
 
     if search_query:
         all_products = all_products.filter(product_name__icontains=search_query)
+
+        
+
+        
 
     paginator = Paginator(all_products, 8)
     page_number = request.GET.get('page', 1)
@@ -316,3 +364,19 @@ def clear_wishlist(request):
     
   
     return redirect('wishlist')  
+
+
+
+
+
+    
+def checkout(request):
+   
+    
+    return render (request,'checkout.html')
+   
+
+def order_success(request):
+    return render (request,'order_success.html')
+
+

@@ -30,7 +30,7 @@
             </a>
         </div>
         <div class="block-cart action">
-            <a class="icon-link icon-link-2" href="">
+            <a class="icon-link icon-link-2" href="{% url 'cart_detail' %}">
                 <i class="flaticon-shopping-bag"></i>
                 <span class="count count-2">{{request.session.cart|length}}</span>
                 <span class="text">
@@ -85,7 +85,7 @@
                         
                         <li>
                             <a href="{% url 'cart_detail' %}" class="wc-cart mb-10">View cart</a>
-                            <a href="" class="wc-checkout">Checkout</a>
+                            <a href="{% url 'checkout' %}" class="wc-checkout">Checkout</a>
                         </li>
                     </ul>
                 </div>

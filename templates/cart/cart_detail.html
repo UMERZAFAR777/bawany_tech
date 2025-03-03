@@ -89,12 +89,12 @@
                                             <li>Shipment Charges <span style="font-weight: bold; color: green;">Free Shipment</span></li>
                                             <li>Order Total <span style="font-size: 20px; font-weight: bold; color: #007bff;">Rs {{ cart_total_amount }}</span></li>
                                         {% else %}
-                                            <li>Shipment Charges <span style="font-weight: bold; color: red;">Rs 2999</span></li>
-                                            <li>Order Total <span style="font-size: 20px; font-weight: bold; color: #dc3545;">Rs {{ cart_total_amount|add:2999 }}</span></li>
+                                            <li>Shipment Charges <span style="font-weight: bold; color: red;">Rs 200</span></li>
+                                            <li>Order Total <span style="font-size: 20px; font-weight: bold; color: #dc3545;">Rs {{ cart_total_amount|add:200 }}</span></li>
                                         {% endif %}
                                     </ul>
                                     
-                                       <a class="tp-btn-h1" href="checkout.html">Proceed to checkout</a>
+                                       <a class="tp-btn-h1" href="{% url 'checkout' %}">Proceed to checkout</a>
                                     </div>
                               </div>
                            </div>
