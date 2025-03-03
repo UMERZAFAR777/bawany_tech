@@ -338,12 +338,12 @@
                         </div>
                         <div class="col-xl-5 col-lg-4 d-none d-lg-block">
                             <div class="header__search">
-                                <form action="">
+                                <form action="{% url 'shop' %}" method="GET">
 
 
                                     <div class="header__search-box">
-                                        <input class="search-input search-input-2" type="text"
-                                            placeholder="I'm shopping for...">
+                                        <input class="search-input search-input-2" type="text" name="search_query" placeholder="I'm shopping for...">
+
                                         <button class="button button-2 button-3" type="submit"><i
                                                 class="far fa-search"></i></button>
                                     </div>
@@ -487,8 +487,8 @@
                     </a>
                 </div>
                 <div class="offcanvas__search mb-25">
-                    <form action="#">
-                        <input type="text" placeholder="What are you searching for?">
+                    <form action="{% url 'shop' %}">
+                        <input type="text" name="search_query" placeholder="What are you searching for?">
                         <button type="submit"><i class="far fa-search"></i></button>
                     </form>
                 </div>

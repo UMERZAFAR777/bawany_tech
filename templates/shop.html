@@ -56,6 +56,20 @@
             console.log("🔄 Bootstrap Modals Reinitialized!");
         }
     });
+    $(document).ready(function () {
+    $(".search-input").on("keyup", function () {
+        var searchQuery = $(this).val().trim();
+        $.ajax({
+            url: "{% url 'filter-data' %}",
+            data: { 'q': searchQuery },
+            dataType: "json",
+            success: function (res) {
+                $("#filteredProducts").html(res.data);
+            }
+        });
+    });
+});
+
 </script>
 {% endblock %}
 

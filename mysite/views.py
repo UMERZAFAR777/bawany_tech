@@ -110,41 +110,41 @@ def register(request):
 
 
 
-def shop(request):
-    category = Category.objects.all()
-    all_products = Product.objects.filter(
-        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-    ).order_by('-id')
+# def shop(request):
+#     category = Category.objects.all()
+#     all_products = Product.objects.filter(
+#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+#     ).order_by('-id')
 
-    min_price = Product.objects.aggregate(Min('original_price'))
-    max_price = Product.objects.aggregate(Max('original_price'))
+#     min_price = Product.objects.aggregate(Min('original_price'))
+#     max_price = Product.objects.aggregate(Max('original_price'))
 
  
-    FilterPrice = request.GET.get('FilterPrice')
+#     FilterPrice = request.GET.get('FilterPrice')
 
   
-    if FilterPrice:
-        try:
-            Int_FilterPrice = int(FilterPrice)
-            all_products = all_products.filter(original_price__lte=Int_FilterPrice)  
-        except ValueError:
-            pass 
+#     if FilterPrice:
+#         try:
+#             Int_FilterPrice = int(FilterPrice)
+#             all_products = all_products.filter(original_price__lte=Int_FilterPrice)  
+#         except ValueError:
+#             pass 
 
    
-    paginator = Paginator(all_products, 8)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+#     paginator = Paginator(all_products, 8)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
 
-    data = {
-        'category': category,
-        'all_products': page_obj, 
-        'page_obj': page_obj,
-        'min_price': min_price,
-        'max_price': max_price,
-        'FilterPrice': FilterPrice,
-    }
+#     data = {
+#         'category': category,
+#         'all_products': page_obj, 
+#         'page_obj': page_obj,
+#         'min_price': min_price,
+#         'max_price': max_price,
+#         'FilterPrice': FilterPrice,
+#     }
 
-    return render(request, 'shop.html', data)
+#     return render(request, 'shop.html', data)
 
 
 def contact(request):
@@ -159,31 +159,31 @@ def about(request):
 
 
 
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 
-def filter_data(request):
-    categories = request.GET.getlist('category[]')
-    brands = request.GET.getlist('brand[]')
+# def filter_data(request):
+#     categories = request.GET.getlist('category[]')
+#     brands = request.GET.getlist('brand[]')
 
-    all_products = Product.objects.filter(
-        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-    )
+#     all_products = Product.objects.filter(
+#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+#     )
 
-    if categories:
-        all_products = all_products.filter(category__id__in=categories)
+#     if categories:
+#         all_products = all_products.filter(category__id__in=categories)
 
-    if brands:
-        all_products = all_products.filter(brand__id__in=brands)
+#     if brands:
+#         all_products = all_products.filter(brand__id__in=brands)
 
-    # Pagination (Jab products filter ho jayein)
-    paginator = Paginator(all_products, 8)  # 10 products per page
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
+#     # Pagination (Jab products filter ho jayein)
+#     paginator = Paginator(all_products, 8)  # 10 products per page
+#     page_number = request.GET.get('page', 1)
+#     page_obj = paginator.get_page(page_number)
 
-    # Render the product HTML template
-    html_content = render_to_string('ajax/shop.html', {'page_obj': page_obj})
+#     # Render the product HTML template
+#     html_content = render_to_string('ajax/shop.html', {'page_obj': page_obj})
 
-    return JsonResponse({'data': html_content})
+#     return JsonResponse({'data': html_content})
 
 
 
@@ -252,14 +252,65 @@ def cart_detail(request):
 
 
 
+def shop(request):
+    category = Category.objects.all()
+    all_products = Product.objects.filter(
+        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+    ).order_by('-id')
+
+    min_price = Product.objects.aggregate(Min('original_price'))
+    max_price = Product.objects.aggregate(Max('original_price'))
+
+    # ✅ Search Query Handle karna
+    search_query = request.GET.get('search_query', '')  # Make sure frontend bhi yahi bhej raha ho
+    if search_query:
+        all_products = all_products.filter(product_name__icontains=search_query)
+
+    # ✅ Pagination ko filter hone ke baad apply karein
+    paginator = Paginator(all_products, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    data = {
+        'category': category,
+        'all_products': page_obj,
+        'page_obj': page_obj,
+        'min_price': min_price,
+        'max_price': max_price,
+        'FilterPrice': request.GET.get('FilterPrice'),
+        'search_query': search_query
+    }
+
+    return render(request, 'shop.html', data)
 
 
 
 
+def filter_data(request):
+    categories = request.GET.getlist('category[]')
+    brands = request.GET.getlist('brand[]')
+    search_query = request.GET.get('q', '')
 
+    all_products = Product.objects.filter(
+        section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
+    )
 
+    if categories:
+        all_products = all_products.filter(category__id__in=categories)
 
+    if brands:
+        all_products = all_products.filter(brand__id__in=brands)
 
+    if search_query:
+        all_products = all_products.filter(product_name__icontains=search_query)
+
+    paginator = Paginator(all_products, 8)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    html_content = render_to_string('ajax/shop.html', {'page_obj': page_obj})
+
+    return JsonResponse({'data': html_content})
 
 
 
