@@ -4,6 +4,9 @@
 {% block content %}
 
 
+
+
+
  <!-- page-banner-area-start -->
  <div class="page-banner-area page-banner-height-2" data-background="/static/assets/img/banner/page-banner-4.jpg">
     <div class="container">
@@ -46,7 +49,7 @@
 <!-- checkout-area-start -->
 <section class="checkout-area pb-85">
     <div class="container">
-        <form action="" method="POST">
+        <form action="{% url 'checkout' %}" method="POST">
             {% csrf_token %}
             <div class="row">
                 <div class="col-lg-6">
@@ -57,46 +60,46 @@
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>First Name <span class="required">*</span></label>
-                                    <input type="text" name="first_name" placeholder="">
+                                    <input type="text" name="first_name" placeholder="" required="true">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Last Name <span class="required">*</span></label>
-                                    <input type="text" name="last_name" placeholder="">
+                                    <input type="text" name="last_name" placeholder="" required="true">
                                 </div>
                             </div>
                             
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Address <span class="required">*</span></label>
-                                    <input type="text" name="address" placeholder="Street address">
+                                    <input type="text" name="address" placeholder="Street address" required="true">
                                 </div>
                             </div>
                             
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Town / City <span class="required">*</span></label>
-                                    <input type="text" name="city" placeholder="Town / City">
+                                    <input type="text" name="city" placeholder="Town / City" required="true">
                                 </div>
                             </div>
                            
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Postcode / Zip <span class="required">*</span></label>
-                                    <input type="text" name="postal_code" placeholder="Postcode / Zip">
+                                    <input type="text" name="postal_code" placeholder="Postcode / Zip" required="true">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Email Address <span class="required">*</span></label>
-                                    <input type="email" name="email" placeholder="">
+                                    <input type="email" name="email" placeholder="" required="true">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Phone <span class="required">*</span></label>
-                                    <input type="text" name="phone" placeholder="Phone Number">
+                                    <input type="text" name="phone" placeholder="Phone Number" required="true">
                                 </div>
                             </div>
                            
@@ -113,9 +116,9 @@
                             <thead>
                                 <tr>
                                     <th class="product-name">Total Product</th>
-                                    
+                
                                     <th class="product-total text-right">{{ request.session.cart|length }}</th>
-                                   
+                
                                 </tr>
                                 <tr>
                                     <th class="product-name">Product Name</th>
@@ -123,7 +126,7 @@
                                     <th class="product-total text-right">{{ value.product_name | slice:":30" }}..</th>
                                     {% endfor %}
                                 </tr>
-                                
+                
                             </thead>
                             <tbody>
                                 <tr class="cart_item">
@@ -144,7 +147,8 @@
                                 <tr class="order-total">
                                     <th>Order Total</th>
                                     <td class="product-total text-right">
-                                        <span class="amount" style="font-size: 20px; font-weight: bold; color: #007bff;">Rs {{ cart_total_amount }}</span>
+                                        <span class="amount"
+                                            style="font-size: 20px; font-weight: bold; color: #007bff;">Rs {{ cart_total_amount }}</span>
                                     </td>
                                 </tr>
                                 {% else %}
@@ -155,7 +159,8 @@
                                 <tr class="order-total">
                                     <th>Order Total</th>
                                     <td class="product-total text-right">
-                                        <span class="amount" style="font-size: 20px; font-weight: bold; color: #dc3545;">Rs {{ cart_total_amount|add:200 }}</span>
+                                        <span class="amount"
+                                            style="font-size: 20px; font-weight: bold; color: #dc3545;">Rs {{cart_total_amount|add:200 }}</span>
                                     </td>
                                 </tr>
                                 {% endif %}
@@ -163,8 +168,6 @@
                         </table>
                     </div>
                 </div>
-                
-                
                         <div class="payment-method">
                             <div class="accordion" id="checkoutAccordion">
                                 <div class="accordion-item">
@@ -184,21 +187,20 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="paymentTwo">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment" aria-expanded="false" aria-controls="payment">
-                                            We’ll Get in Touch (Under 15 to 30 Minutes Response Time)
+                                            We’ll Get in Touch (15 to 30 Minutes Response Time)
                                         </button>
                                     </h2>
                                     <div id="payment" class="accordion-collapse collapse" aria-labelledby="paymentTwo" data-bs-parent="#checkoutAccordion">
                                         <div class="accordion-body">
-                                            <p>Thank you for your inquiry! Please fill out the form below, and one of our agents will contact you as soon as possible, typically within 15 to 30 minutes.</p>
-                                            <p>Our agent will get in touch with you shortly.</p>
+                                            <p>Thank you for your interest! Please fill out the form, and one of our agents will contact you within 15 to 30 minutes.</p>
+                                            <p>Our team will reach out to assist you shortly.</p>
                                         </div>
                                     </div>
                                 </div>
                                
                             </div>
                             <div class="order-button-payment mt-20">
-                                <button type="submit" class="tp-btn-h1">Place Order</button>
-
+                                <button type="submit" class="tp-btn-h1">Place order</button>
                             </div>
                         </div>
                     </div>

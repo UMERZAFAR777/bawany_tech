@@ -367,16 +367,46 @@ def clear_wishlist(request):
 
 
 
+from buyer.models import *
 
-
-    
 def checkout(request):
-   
-    
-    return render (request,'checkout.html')
-   
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        postal_code = request.POST.get("postal_code")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+       
+
+        try:
+            buyer = Buyer.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                address=address,
+                city=city,
+                postal_code=postal_code,
+                email=email,
+                phone=phone,
+               
+              
+            )
+            buyer.save()
+            messages.success(request, "Your order has been placed successfully!")
+            return redirect("order_success")
+        except Exception as e:
+            messages.error(request, "Something went wrong. Please try again.")
+            print("Error:", e)  # Debugging
+            return redirect("checkout")
+
+    return render(request, "checkout.html")
+
 
 def order_success(request):
+    
+
+    
     return render (request,'order_success.html')
 
 

@@ -1,12 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="col-md-6 offset-md-3">  
-<h1>Thank you for your order!</h1>
-    <p>Your order has been placed successfully.</p>
-    <br>
-    
-    <button style="border: 10px;"><a href="{% url 'index' %}">Back Home </a></button>
-</div>  
+<h2>Order Placed Successfully!</h2>
+<p>Thank you for your purchase, {{ order.buyer.first_name }}!</p>
+
+<h3>Order Details:</h3>
+<ul>
+    <li><strong>Total Amount:</strong> Rs {{ order.order_total }}</li>
+    <li><strong>Order Status:</strong> {{ order.status }}</li>
+</ul>
+
+<h3>Purchased Items:</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.orderitem_set.all %}
+        <tr>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
 {% endblock %}
