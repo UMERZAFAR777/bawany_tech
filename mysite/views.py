@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from slider.models import Slider
 from app.models import Main_Category,Category,Sub_Category
-from product.models import Product,Section
+from product.models import Product,Section,Time
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -20,12 +20,14 @@ def index(request):
     top_deals = Product.objects.filter(section__name="Top Deals Of The Day").order_by('-id')
     top_featured = Product.objects.filter(section__name="Top Featured Products").order_by('-id')
     top_selling = Product.objects.filter(section__name="Top Selling Products").order_by('-id')
+    time = Time.objects.first()
     data = {
         'slider':slider,
         'main_category':main_category,
         'top_deals':top_deals,
         'top_featured':top_featured,
         'top_selling':top_selling,
+        'time':time,
 
 
     }
@@ -105,41 +107,7 @@ def register(request):
         messages.success(request, 'Registered Successfully! Please login.')
 
         return redirect('login') 
-   
 
-# def shop(request):
-#     category = Category.objects.all()
-#     all_products = Product.objects.filter(
-#     section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-#     ).order_by('-id')
-
-#     paginator = Paginator(all_products, 8) 
-
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-
-
-#     min_price = Product.objects.all().aggregate(Min('original_price'))
-#     max_price = Product.objects.all().aggregate(Max('original_price'))
-#     FilterPrice = request.GET.get('FilterPrice')
-#     if FilterPrice:
-#         Int_FilterPrice = int(FilterPrice)
-#         all_products = Product.objects.filter(original_price__lte = Int_FilterPrice)
-#     else:
-#         all_products = Product.objects.all()
-
-
-#     data = {
-#         'category':category,
-#         'all_products':all_products,
-#         'all_products':page_obj,
-#         'page_obj':page_obj,
-#         'min_price':min_price,
-#         'max_price':max_price,
-#         'FilterPrice':FilterPrice,
-#     }
-
-#     return render (request,'shop.html',data)
 
 
 def shop(request):
@@ -151,25 +119,25 @@ def shop(request):
     min_price = Product.objects.aggregate(Min('original_price'))
     max_price = Product.objects.aggregate(Max('original_price'))
 
-    # Get filter price from request
+ 
     FilterPrice = request.GET.get('FilterPrice')
 
-    # Apply filter if price is provided
+  
     if FilterPrice:
         try:
             Int_FilterPrice = int(FilterPrice)
-            all_products = all_products.filter(original_price__lte=Int_FilterPrice)  # ✅ Apply filter on existing query
+            all_products = all_products.filter(original_price__lte=Int_FilterPrice)  
         except ValueError:
-            pass  # If invalid input, ignore filter
+            pass 
 
-    # Apply pagination AFTER filtering
+   
     paginator = Paginator(all_products, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     data = {
         'category': category,
-        'all_products': page_obj,  # ✅ Pass paginated objects
+        'all_products': page_obj, 
         'page_obj': page_obj,
         'min_price': min_price,
         'max_price': max_price,
@@ -279,5 +247,21 @@ def cart_clear(request):
 @login_required(login_url="/accounts/login/")
 def cart_detail(request):
     return render(request, 'cart/cart_detail.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

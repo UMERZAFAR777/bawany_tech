@@ -87,4 +87,8 @@ class Additional_Information(models.Model):
     detail = models.CharField(max_length=100)    
 
 
+class Time(models.Model):
+    deal_end_time = models.DateTimeField() 
 
+    def __str__(self):
+        return self.deal_end_time.strftime('%b %d %Y %H:%M:%S')

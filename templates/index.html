@@ -147,29 +147,32 @@
                 <!-- topsell__area-start -->
                 <section class="topsell__area-1 pt-15">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <div class="section__head d-flex justify-content-between mb-10">
-                                    <div class="section__title">
-                                        <h5 class="st-titile-d">Top Deals Of The Day</h5>
-                                    </div>
-                                    <div class="offer-time">
-                                        <span class="offer-title d-none d-sm-block">Hurry Up! Offer ends in:</span>
-                                        <div class="countdown">
-                                            <div class="countdown-inner b-radius" data-countdown=""
-                                                data-date="Mar 10 2025 20:20:22">
-                                                <ul class="text-center">
-                                                    <li><span data-days="">36</span> Days</li>
-                                                    <li><span data-hours="">8</span> Hours</li>
-                                                    <li><span data-minutes="">16</span> Mins</li>
-                                                    <li><span data-seconds="">54</span> Secs</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        {% if time %}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="section__head d-flex justify-content-between mb-10">
+                <div class="section__title">
+                    <h5 class="st-titile-d">Top Deals Of The Day</h5>
+                </div>
+                <div class="offer-time">
+                    <span class="offer-title d-none d-sm-block">Hurry Up! Offer ends in:</span>
+                    <div class="countdown">
+                        <div class="countdown-inner b-radius" data-countdown=""
+                            data-date="{{ time.deal_end_time|date:'M d Y H:i:s' }}">
+                            <ul class="text-center">
+                                <li><span data-days="">36</span> Days</li>
+                                <li><span data-hours="">8</span> Hours</li>
+                                <li><span data-minutes="">16</span> Mins</li>
+                                <li><span data-seconds="">54</span> Secs</li>
+                            </ul>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
                         <div class="row">
                             <div class="product-bs-slider">
                                 <div class="product-slider swiper-container">
