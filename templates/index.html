@@ -157,7 +157,7 @@
                                         <span class="offer-title d-none d-sm-block">Hurry Up! Offer ends in:</span>
                                         <div class="countdown">
                                             <div class="countdown-inner b-radius" data-countdown=""
-                                                data-date="Mar 02 2022 20:20:22">
+                                                data-date="Mar 10 2025 20:20:22">
                                                 <ul class="text-center">
                                                     <li><span data-days="">36</span> Days</li>
                                                     <li><span data-hours="">8</span> Hours</li>
@@ -208,16 +208,7 @@
                                             <div class="product__content">
                                                 <h6><a href="product-details.html">{{i.product_name|slice:":60"}}</a>
                                                 </h6>
-                                                <div class="rating mb-5">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                    </ul>
-                                                    <span>(01 review)</span>
-                                                </div>
+                                                
 
                                                 <div class="price mb-10"
                                                     style="font-size: 18px; font-weight: bold; color: #333;">
@@ -284,11 +275,15 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6 d-flex flex-column justify-content-between p-3">
+                                            
                                             <div>
                                                 <h6><a href="{{ i.get_absolute_url }}">{{ i.product_name }}</a></h6>
                                                 <div class="price d-price">
                                                     <span>Rs {{ i.original_price }}</span>
                                                 </div>
+                                            </div>
+                                            <div class="progress-rate">
+                                                <span>Availability:{{i.availability}}</span>
                                             </div>
                                             <div class="cart-option">
                                                 <a href="/static/cart.html" class="cart-btn-4 w-100 mr-10">Add to
@@ -363,18 +358,12 @@
                                                         </div>
                                                         <div class="product__content">
                                                             <h6><a href="{{ i.get_absolute_url }}">{{i.product_name | slice:":60"}}</a></h6>
-                                                            <div class="rating mb-5">
-                                                                <ul>
-                                                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                                </ul>
-                                                                <span>(01 review)</span>
-                                                            </div>
+                                                            
                                                             <div class="price">
                                                                 <span>Rs {{i.original_price}}</span>
+                                                            </div>
+                                                            <div class="progress-rate">
+                                                                <span>Availability:{{i.availability}}</span>
                                                             </div>
                                                         </div>
                                                         <div class="product__add-cart text-center">

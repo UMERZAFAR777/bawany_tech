@@ -2,33 +2,65 @@
 
 {% block content %}
 
-{% block script %}
 
+{% block script %}
 <script>
     $(document).ready(function () {
-        $(".filter-checkbox").on('click', function () {
+        $(".filter-checkbox").on("click", function () {
             var filter_object = {};
-            $(".filter-checkbox").each(function (index, ele) {
-                var filter_value = $(this).val();
-                var filter_key = $(this).data('filter');
-                console.log(filter_key, filter_value);
-                filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function (el) {
-                    return el.value;
-                });
+            $(".filter-checkbox").each(function () {
+                var filter_key = $(this).data("filter");
+                filter_object[filter_key] = $('input[data-filter="' + filter_key + '"]:checked')
+                    .map(function () {
+                        return this.value;
+                    }).get();
             });
+
             $.ajax({
                 url: "{% url 'filter-data' %}",
                 data: filter_object,
-                dataType: 'json',
+                dataType: "json",
                 success: function (res) {
                     $("#filteredProducts").html(res.data);
+
+                    // **Reinitialize Bootstrap Modals**
+                    reinitializeBootstrapModals();
+
+                    console.log("✅ Filter applied & Modals reinitialized.");
+                },
+                error: function () {
+                    console.log("❌ Error in AJAX request.");
                 }
             });
         });
+
+        function reinitializeBootstrapModals() {
+            // **Remove old event listeners to prevent duplication**
+            $(document).off("click", '[data-bs-toggle="modal"]');
+
+            // **Reattach event listeners to new elements**
+            $(document).on("click", '[data-bs-toggle="modal"]', function (event) {
+                event.preventDefault();
+                let modalId = $(this).attr("data-bs-target");
+                let modalElement = document.querySelector(modalId);
+
+                if (modalElement) {
+                    let modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    if (!modalInstance) {
+                        modalInstance = new bootstrap.Modal(modalElement);
+                    }
+                    modalInstance.show();
+                }
+            });
+
+            console.log("🔄 Bootstrap Modals Reinitialized!");
+        }
     });
 </script>
-
 {% endblock %}
+
+
+
 <style>
     input[type=range]{
     -webkit-appearance: none;
@@ -205,19 +237,13 @@
                                             </div>
                                             <div class="product__content-3">
                                                 <h6><a href="{{ i.get_absolute_url }}">{{i.product_name | slice:":60"}}</a></h6>
-                                                <div class="rating mb-5">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
-                                                    </ul>
-                                                    <span>(01 review)</span>
-                                                </div>
+                                                
                                                 <div class="price mb-10">
                                                     <span>Rs {{i.original_price}}</span>
                                                 </div>
+                                            </div>
+                                            <div class="progress-rate">
+                                                <span>Availability:{{i.availability}}</span>
                                             </div>
                                             <div class="product__add-cart-s text-center">
                                                 <button type="button"
@@ -444,3 +470,15 @@
 
 </main>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
