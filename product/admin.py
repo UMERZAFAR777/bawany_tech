@@ -21,5 +21,6 @@ admin.site.register(Product,Product_Admin)
 admin.site.register(Product_Image)
 admin.site.register(Additional_Information)
 admin.site.register(Time)
+admin.site.register(Wishlist)
 
 

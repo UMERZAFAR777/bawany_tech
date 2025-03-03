@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from ckeditor.fields import RichTextField
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Section(models.Model):
@@ -92,3 +93,15 @@ class Time(models.Model):
 
     def __str__(self):
         return self.deal_end_time.strftime('%b %d %Y %H:%M:%S')
+
+
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.product_name}"
+
+

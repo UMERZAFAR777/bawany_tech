@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from slider.models import Slider
 from app.models import Main_Category,Category,Sub_Category
-from product.models import Product,Section,Time
+from product.models import Product,Section,Time,Wishlist
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -21,6 +21,13 @@ def index(request):
     top_featured = Product.objects.filter(section__name="Top Featured Products").order_by('-id')
     top_selling = Product.objects.filter(section__name="Top Selling Products").order_by('-id')
     time = Time.objects.first()
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+    else:
+        products = []
+
+        
     data = {
         'slider':slider,
         'main_category':main_category,
@@ -28,6 +35,7 @@ def index(request):
         'top_featured':top_featured,
         'top_selling':top_selling,
         'time':time,
+        'products':products,
 
 
     }
@@ -110,42 +118,6 @@ def register(request):
 
 
 
-# def shop(request):
-#     category = Category.objects.all()
-#     all_products = Product.objects.filter(
-#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-#     ).order_by('-id')
-
-#     min_price = Product.objects.aggregate(Min('original_price'))
-#     max_price = Product.objects.aggregate(Max('original_price'))
-
- 
-#     FilterPrice = request.GET.get('FilterPrice')
-
-  
-#     if FilterPrice:
-#         try:
-#             Int_FilterPrice = int(FilterPrice)
-#             all_products = all_products.filter(original_price__lte=Int_FilterPrice)  
-#         except ValueError:
-#             pass 
-
-   
-#     paginator = Paginator(all_products, 8)
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-
-#     data = {
-#         'category': category,
-#         'all_products': page_obj, 
-#         'page_obj': page_obj,
-#         'min_price': min_price,
-#         'max_price': max_price,
-#         'FilterPrice': FilterPrice,
-#     }
-
-#     return render(request, 'shop.html', data)
-
 
 def contact(request):
     return render (request,'contact.html')
@@ -159,37 +131,8 @@ def about(request):
 
 
 
-# from django.core.paginator import Paginator
-
-# def filter_data(request):
-#     categories = request.GET.getlist('category[]')
-#     brands = request.GET.getlist('brand[]')
-
-#     all_products = Product.objects.filter(
-#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-#     )
-
-#     if categories:
-#         all_products = all_products.filter(category__id__in=categories)
-
-#     if brands:
-#         all_products = all_products.filter(brand__id__in=brands)
-
-#     # Pagination (Jab products filter ho jayein)
-#     paginator = Paginator(all_products, 8)  # 10 products per page
-#     page_number = request.GET.get('page', 1)
-#     page_obj = paginator.get_page(page_number)
-
-#     # Render the product HTML template
-#     html_content = render_to_string('ajax/shop.html', {'page_obj': page_obj})
-
-#     return JsonResponse({'data': html_content})
 
 
-
-
-def wishlist(request):
-    return render (request,'wishlist.html')
 
 
 def cart(request):
@@ -246,7 +189,16 @@ def cart_clear(request):
 
 @login_required(login_url="/accounts/login/")
 def cart_detail(request):
-    return render(request, 'cart/cart_detail.html')
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+    else:
+        products = []
+
+    data = {
+        'products':products
+    }
+    return render(request, 'cart/cart_detail.html',data)
 
 
 
@@ -271,6 +223,11 @@ def shop(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+    else:
+        products = []
     data = {
         'category': category,
         'all_products': page_obj,
@@ -278,7 +235,8 @@ def shop(request):
         'min_price': min_price,
         'max_price': max_price,
         'FilterPrice': request.GET.get('FilterPrice'),
-        'search_query': search_query
+        'search_query': search_query,
+        'products':products,
     }
 
     return render(request, 'shop.html', data)
@@ -314,5 +272,47 @@ def filter_data(request):
 
 
 
+def wishlist_view(request):
+    # Fetch all products in the user's wishlist
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+    else:
+        products = []
+    
+    return render(request, 'wishlist.html', {'products': products})
 
 
+
+
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
+
+    if wishlist_item:
+        wishlist_item.delete()
+        return redirect('wishlist')  # Redirect back to the wishlist page after removal
+
+    return redirect('wishlist')  # In case the item is not in the wishlist
+
+
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)  # Get the product with the given ID
+    wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+
+    if not created:  # If the item was already in the wishlist, delete it (toggle behavior)
+        wishlist_item.delete()
+        return JsonResponse({"status": "removed"})
+    
+    return JsonResponse({"status": "added"})
+
+
+
+
+@login_required
+def clear_wishlist(request):
+  
+    Wishlist.objects.filter(user=request.user).delete()
+    
+  
+    return redirect('wishlist')  

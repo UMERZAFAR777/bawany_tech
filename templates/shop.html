@@ -70,7 +70,37 @@
     });
 });
 
+
+
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".wishlist-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let productId = this.getAttribute("data-product-id");
+    
+                fetch(`/wishlist/add/${productId}/`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "added") {
+                        alert("Product added to wishlist!");
+                        this.classList.add("active");
+                    } else {
+                        alert("Product removed from wishlist!");
+                        this.classList.remove("active");
+                    }
+                });
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}
 
 
@@ -242,10 +272,14 @@
                                                         <i class="fal fa-eye"></i>
                                                         <i class="fal fa-eye"></i>
                                                     </a>
-                                                    <a href="#" class="icon-box icon-box-1">
+                                                    <a href="javascript:void(0);" class="icon-box icon-box-1 wishlist-btn" data-product-id="{{ i.id }}">
                                                         <i class="fal fa-heart"></i>
                                                         <i class="fal fa-heart"></i>
+                                                        
                                                     </a>
+
+                                                   
+                                                   
                                                     <a href="#" class="icon-box icon-box-1">
                                                         <i class="fal fa-layer-group"></i>
                                                         <i class="fal fa-layer-group"></i>

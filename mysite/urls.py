@@ -48,8 +48,7 @@ urlpatterns = [
     path('shop/filter-data',views.filter_data,name="filter-data"),
 
 
-    path('wishlist/',views.wishlist,name='wishlist'),
-    # path('cart/',views.cart,name='cart'),
+   
 
 
     path('cart/add/<int:id>/', views.cart_add, name='cart_add'),
@@ -62,8 +61,14 @@ urlpatterns = [
     path('cart/cart-detail/',views.cart_detail,name='cart_detail'),
 
 
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
 
-   
+
+    path('wishlist/clear/', views.clear_wishlist, name='clear_wishlist'),
+
+
 
 ]
 
