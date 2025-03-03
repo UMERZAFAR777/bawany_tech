@@ -1,0 +1,94 @@
+<div class="col-xl-4 col-lg-5 col-md-8 col-sm-8">
+    <div class="header-action">
+        {% if user.is_authenticated %}
+        <div class="block-userlink">
+            <a class="icon-link icon-link-2" href="{% url 'handlelogout' %}">
+                <i class="flaticon-user"></i>
+                <span class="text">
+                    <span class="sub">Logout </span>
+                    My Account </span>
+            </a>
+        </div>
+        {% else %}
+        <div class="block-userlink">
+            <a class="icon-link icon-link-2" href="{% url 'login' %}">
+                <i class="flaticon-user"></i>
+                <span class="text">
+                    <span class="sub">Login </span>
+                    My Account </span>
+            </a>
+        </div>
+        {% endif %}
+        <div class="block-wishlist action">
+            <a class="icon-link icon-link-2" href="{% url 'wishlist' %}">
+                <i class="flaticon-heart"></i>
+                <span class="count count-2">0</span>
+                <span class="text">
+                    <span class="sub">Favorite</span>
+                    My Wishlist </span>
+            </a>
+        </div>
+        <div class="block-cart action">
+            <a class="icon-link icon-link-2" href="">
+                <i class="flaticon-shopping-bag"></i>
+                <span class="count count-2">{{request.session.cart|length}}</span>
+                <span class="text">
+                    <span class="sub">Your Cart:</span>
+                    Rs {{cart_total_amount}} </span>
+            </a>
+            <div class="cart">
+                <div class="cart__mini">
+                    <ul>
+                        <li>
+                            <div class="cart__title">
+                                <h4>Your Cart</h4>
+                                <span>({{request.session.cart|length}} Item in Cart)</span>
+                            </div>
+                        </li>
+
+                        {% for key,value in request.session.cart.items %}
+
+                        <li>
+                            <div
+                                class="cart__item d-flex justify-content-between align-items-center">
+                                <div class="cart__inner d-flex">
+                                    <div class="cart__thumb">
+                                        <a href="/static/product-details.html">
+                                            <img src="{{value.img}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="cart__details">
+                                        <h6><a href="/static/product-details.html"> {{ value.product_name | slice:":30" }} </a></h6>
+                                        <div class="cart__price" style="font-size: 16px; font-weight: bold; color: #333;">
+                                            <span>Rs {{value.original_price}} <span style="margin: 0 5px;">×</span> {{value.quantity}}</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="cart__del">
+                                    <a href="{% url 'item_clear' key %}"><i class="fal fa-times"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                        <li>
+                            <div
+                                class="cart__sub d-flex justify-content-between align-items-center">
+                                <h6>Subtotal</h6>
+                                <span class="cart__sub-total">Rs {{cart_total_amount}} </span>
+                            </div>
+                        </li>
+
+
+                        
+                        <li>
+                            <a href="{% url 'cart_detail' %}" class="wc-cart mb-10">View cart</a>
+                            <a href="" class="wc-checkout">Checkout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
