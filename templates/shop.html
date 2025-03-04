@@ -282,10 +282,7 @@
 
                                                    
                                                    
-                                                    <a href="#" class="icon-box icon-box-1">
-                                                        <i class="fal fa-layer-group"></i>
-                                                        <i class="fal fa-layer-group"></i>
-                                                    </a>
+                                                  
                                                 </div>
                                             </div>
                                             <div class="product__content-3">
@@ -299,12 +296,17 @@
                                                 <span>Availability:{{i.availability}}</span>
                                             </div>
                                             <div class="product__add-cart-s text-center">
-                                                <a href="{% url 'cart_add' i.id %}"
-                                                    class="cart-btn d-flex mb-10 align-items-center justify-content-center w-100">
-                                                    Add to Cart
-                                            </a>
-
+                                                {% if i.availability == 'In Stock' %}
+                                                    <a href="{% url 'cart_add' i.id %}" class="cart-btn d-flex mb-10 align-items-center justify-content-center w-100">
+                                                        Add to Cart
+                                                    </a>
+                                                {% else %}
+                                                    <button class="cart-btn d-flex mb-10 align-items-center justify-content-center w-100" disabled>
+                                                        Out of Stock
+                                                    </button>
+                                                {% endif %}
                                             </div>
+                                            
                                         </div>
                                     </div>
 
@@ -449,16 +451,21 @@
                                         <form action="#">
                                             <div class="pro-quan-area d-lg-flex align-items-center">
                                                 <div class="product-quantity mr-20 mb-25">
-                                                    <div class="cart-plus-minus p-relative"><input type="text"
-                                                            value="1" /></div>
+                                                    <div class="cart-plus-minus p-relative">
+                                                        <input type="text" value="1" />
+                                                    </div>
                                                 </div>
                                                 <div class="pro-cart-btn mb-25">
-                                                    <button class="cart-btn" type="submit">Add to
-                                                        cart</button>
+                                                    {% if i.availability == 'In Stock' %}
+                                                        <button class="cart-btn" type="submit">Add to Cart</button>
+                                                    {% else %}
+                                                        <button class="cart-btn" type="button" disabled>Out of Stock</button>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
+                                    
                                     <div class="product__stock mb-30">
                                         <ul>
                                             <li><a href="/static/#">

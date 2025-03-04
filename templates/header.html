@@ -298,10 +298,13 @@
                                         <span>Please Login First.... (*!*) </span>
                                     </div>
                                     {% endif %}
+
                                 </div>
-
-
+                                
+                               
+                          
                             </div>
+                         
                         </div>
                         <div class="col-xl-6 col-lg-5 d-none d-lg-block">
                             <div class="header-inner-end text-md-end">
@@ -445,7 +448,15 @@
                                         <li><a href="{% url 'contact' %}">Contact Us</a>
 
                                         </li>
-
+                                        {% if user.is_authenticated %}
+                                            {% if latest_order %}
+                                                <li><a href="{% url 'order_tracking' %}">Order Tracking</a></li>
+                                            {% else %}
+                                                <li>No recent orders</li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li><a href="{% url 'login' %}">First Login <del>Order Tracking</del></a></li>
+                                        {% endif %}
                                     </ul>
                                 </nav>
                             </div>
@@ -479,6 +490,15 @@
                     <a href="{% url 'contact' %}">Contact <i class="far fa-angle-down"></i></a>
 
                 </li>
+                {% if user.is_authenticated %}
+                                            {% if latest_order %}
+                                                <li><a href="{% url 'order_tracking' %}">Order Tracking</a></li>
+                                            {% else %}
+                                                <li>No recent orders</li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li><a href="{% url 'login' %}">First Login <del>Order Tracking</del></a></li>
+                                        {% endif %}
             </ul>
         </nav>
     </div>
