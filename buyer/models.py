@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Buyer(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -8,6 +9,8 @@ class Buyer(models.Model):
     postal_code = models.CharField(max_length=20)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
+    total_products = models.IntegerField(default=0)
+    product_names = models.TextField() 
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

@@ -21,12 +21,13 @@
     <tbody>
         {% for item in order.orderitem_set.all %}
         <tr>
-            <td>{{ item.product_name }}</td>
+            <td>{{ item.product_name|truncatechars:30 }}</td>  {# Max 30 characters #}
             <td>{{ item.quantity }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
+<button type="submit"><a href="{% url 'index' %}">Back To Home</a></button>
 
 {% endblock %}

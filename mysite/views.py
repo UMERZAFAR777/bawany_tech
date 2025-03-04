@@ -365,11 +365,18 @@ def clear_wishlist(request):
   
     return redirect('wishlist')  
 
-
-
 from buyer.models import *
 
 def checkout(request):
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+    else:
+        products = []
+
+    data = {
+        'products':products
+    }
     if request.method == "POST":
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
@@ -378,7 +385,11 @@ def checkout(request):
         postal_code = request.POST.get("postal_code")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
-       
+
+        # Get Cart Data from Session
+        cart = request.session.get("cart", {})
+        total_products = len(cart)  # Count total products
+        product_names = ", ".join([value["product_name"] for key, value in cart.items()])  # Convert to string
 
         try:
             buyer = Buyer.objects.create(
@@ -389,18 +400,23 @@ def checkout(request):
                 postal_code=postal_code,
                 email=email,
                 phone=phone,
-               
-              
+                total_products=total_products,
+                product_names=product_names
             )
             buyer.save()
             messages.success(request, "Your order has been placed successfully!")
+            
+            # Optional: Clear Cart After Order
+            del request.session["cart"]
+            request.session.modified = True
+
             return redirect("order_success")
         except Exception as e:
             messages.error(request, "Something went wrong. Please try again.")
-            print("Error:", e)  # Debugging
+            print("Error:", e)
             return redirect("checkout")
 
-    return render(request, "checkout.html")
+    return render(request, "checkout.html",data)
 
 
 def order_success(request):
