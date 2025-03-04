@@ -12,42 +12,44 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.db.models import Max, Min
 # @login_required(login_url = '/login/')
-
-
 def index(request):
+    latest_order = None  # Default to None in case of errors or if no order found
+    products = []  # Default to an empty list in case of no wishlist items
 
-    try:
-        buyer = Buyer.objects.get(user=request.user)  # Get the buyer linked to the logged-in user
-        latest_order = Order.objects.filter(buyer=buyer).order_by('-id').first()  # Get latest order
-    except Buyer.DoesNotExist:
-        latest_order = None  # If no buyer found, set latest_order to None
+    if request.user.is_authenticated:
+        try:
+            # Get the buyer linked to the logged-in user
+            buyer = Buyer.objects.get(user=request.user)
+            # Get the latest order for the buyer
+            latest_order = Order.objects.filter(buyer=buyer).order_by('-id').first()
+        except Buyer.DoesNotExist:
+            latest_order = None  # If no buyer found, set latest_order to None
 
+        # Get wishlist items
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        products = [item.product for item in wishlist_items]
+        
+    # Fetch other data
     slider = Slider.objects.all().order_by('-id')
     main_category = Main_Category.objects.all()
     top_deals = Product.objects.filter(section__name="Top Deals Of The Day").order_by('-id')
     top_featured = Product.objects.filter(section__name="Top Featured Products").order_by('-id')
     top_selling = Product.objects.filter(section__name="Top Selling Products").order_by('-id')
     time = Time.objects.first()
-    if request.user.is_authenticated:
-        wishlist_items = Wishlist.objects.filter(user=request.user)
-        products = [item.product for item in wishlist_items]
-    else:
-        products = []
 
-        
+    # Prepare context data
     data = {
-        'slider':slider,
-        'main_category':main_category,
-        'top_deals':top_deals,
-        'top_featured':top_featured,
-        'top_selling':top_selling,
-        'time':time,
-        'products':products,
-        'latest_order':latest_order,
-
-
+        'slider': slider,
+        'main_category': main_category,
+        'top_deals': top_deals,
+        'top_featured': top_featured,
+        'top_selling': top_selling,
+        'time': time,
+        'products': products,
+        'latest_order': latest_order,
     }
-    return render (request,'index.html',data)
+    
+    return render(request, 'index.html', data)
 
 
 def product_detail(request,slug):
