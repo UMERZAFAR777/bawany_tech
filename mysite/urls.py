@@ -69,7 +69,9 @@ urlpatterns = [
     path('wishlist/clear/', views.clear_wishlist, name='clear_wishlist'),
 
     path('checkout/',views.checkout,name='checkout'),
-    path('order_success/',views.order_success,name='order_success'),
+    # path('order_success/',views.order_success,name='order_success'),
+
+    path("order-success/<int:order_id>/", views.order_success, name="order_success"),
 ]
 
 

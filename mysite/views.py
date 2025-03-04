@@ -367,17 +367,68 @@ def clear_wishlist(request):
 
 
 
-from buyer.models import Buyer
+from buyer.models import *
+
+# def checkout(request):
+#     if request.user.is_authenticated:
+#         wishlist_items = Wishlist.objects.filter(user=request.user)
+#         products = [item.product for item in wishlist_items]
+#     else:
+#         products = []
+
+#     data = {'products': products}
+
+#     if request.method == "POST":
+#         first_name = request.POST.get("first_name")
+#         last_name = request.POST.get("last_name")
+#         address = request.POST.get("address")
+#         city = request.POST.get("city")
+#         postal_code = request.POST.get("postal_code")
+#         email = request.POST.get("email")
+#         phone = request.POST.get("phone")
+
+   
+#         cart = request.session.get("cart", {})
+#         total_products = len(cart)
+#         product_names = "(---------NEXT_PRODUCT---------)".join([value["product_name"] for value in cart.values()])
+
+       
+#         cart_total_amount = sum(int(value["original_price"]) * int(value["quantity"]) for value in cart.values())
+
+
+#         if cart_total_amount <= 2999:
+#             cart_total_amount += 200 
+
+#         try:
+#             buyer = Buyer.objects.create(
+#                 first_name=first_name,
+#                 last_name=last_name,
+#                 address=address,
+#                 city=city,
+#                 postal_code=postal_code,
+#                 email=email,
+#                 phone=phone,
+#                 total_products=total_products,
+#                 product_names=product_names,
+#                 total_amount=cart_total_amount  
+#             )
+#             buyer.save()
+
+#             messages.success(request, "Your order has been placed successfully!")
+
+#             # Clear Cart After Order
+#             del request.session["cart"]
+#             request.session.modified = True
+
+#             return redirect("order_success")
+#         except Exception as e:
+#             messages.error(request, "Something went wrong. Please try again.")
+#             print("Error:", e)
+#             return redirect("checkout")
+
+#     return render(request, "checkout.html", data)
 
 def checkout(request):
-    if request.user.is_authenticated:
-        wishlist_items = Wishlist.objects.filter(user=request.user)
-        products = [item.product for item in wishlist_items]
-    else:
-        products = []
-
-    data = {'products': products}
-
     if request.method == "POST":
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
@@ -387,14 +438,10 @@ def checkout(request):
         email = request.POST.get("email")
         phone = request.POST.get("phone")
 
-   
         cart = request.session.get("cart", {})
         total_products = len(cart)
         product_names = "(---------NEXT_PRODUCT---------)".join([value["product_name"] for value in cart.values()])
-
-       
         cart_total_amount = sum(int(value["original_price"]) * int(value["quantity"]) for value in cart.values())
-
 
         if cart_total_amount <= 2999:
             cart_total_amount += 200 
@@ -412,7 +459,19 @@ def checkout(request):
                 product_names=product_names,
                 total_amount=cart_total_amount  
             )
-            buyer.save()
+
+            order = Order.objects.create(
+                buyer=buyer,
+                order_total=cart_total_amount,
+                status="Pending"
+            )
+
+            for key, value in cart.items():
+                OrderItem.objects.create(
+                    order=order,
+                    product_name=value["product_name"],
+                    quantity=value["quantity"]
+                )
 
             messages.success(request, "Your order has been placed successfully!")
 
@@ -420,19 +479,15 @@ def checkout(request):
             del request.session["cart"]
             request.session.modified = True
 
-            return redirect("order_success")
+            return redirect("order_success", order_id=order.id)
         except Exception as e:
             messages.error(request, "Something went wrong. Please try again.")
             print("Error:", e)
             return redirect("checkout")
 
-    return render(request, "checkout.html", data)
+    return render(request, "checkout.html")
 
-
-def order_success(request):
-    
-
-    
-    return render (request,'order_success.html')
-
+def order_success(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, "order_success.html", {"order": order})
 
