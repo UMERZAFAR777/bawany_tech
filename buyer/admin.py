@@ -38,4 +38,3 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Buyer, BuyerAdmin)
 admin.site.register(Order, OrderAdmin)
 
-

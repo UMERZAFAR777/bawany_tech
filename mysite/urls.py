@@ -72,6 +72,14 @@ urlpatterns = [
     # path('order_success/',views.order_success,name='order_success'),
 
     path("order-success/<int:order_id>/", views.order_success, name="order_success"),
+    
+
+    path("order_tracking/", views.order_tracking, name="order_tracking"),
+
+
+    path("order_tracking/<int:order_id>/", views.order_tracking_detail, name="order_tracking_detail"),
+
+
 ]
 
 

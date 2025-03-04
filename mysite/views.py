@@ -15,6 +15,13 @@ from django.db.models import Max, Min
 
 
 def index(request):
+
+    try:
+        buyer = Buyer.objects.get(user=request.user)  # Get the buyer linked to the logged-in user
+        latest_order = Order.objects.filter(buyer=buyer).order_by('-id').first()  # Get latest order
+    except Buyer.DoesNotExist:
+        latest_order = None  # If no buyer found, set latest_order to None
+
     slider = Slider.objects.all().order_by('-id')
     main_category = Main_Category.objects.all()
     top_deals = Product.objects.filter(section__name="Top Deals Of The Day").order_by('-id')
@@ -36,6 +43,7 @@ def index(request):
         'top_selling':top_selling,
         'time':time,
         'products':products,
+        'latest_order':latest_order,
 
 
     }
@@ -202,44 +210,6 @@ def cart_detail(request):
 
 
 
-
-
-# def shop(request):
-#     category = Category.objects.all()
-#     all_products = Product.objects.filter(
-#         section__name__in=["Top Deals Of The Day", "Top Featured Products", "Top Selling Products"]
-#     ).order_by('-id')
-
-#     min_price = Product.objects.aggregate(Min('original_price'))
-#     max_price = Product.objects.aggregate(Max('original_price'))
-
-   
-#     search_query = request.GET.get('search_query', '') 
-#     if search_query:
-#         all_products = all_products.filter(product_name__icontains=search_query)
-
-   
-#     paginator = Paginator(all_products, 8)
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-
-#     if request.user.is_authenticated:
-#         wishlist_items = Wishlist.objects.filter(user=request.user)
-#         products = [item.product for item in wishlist_items]
-#     else:
-#         products = []
-#     data = {
-#         'category': category,
-#         'all_products': page_obj,
-#         'page_obj': page_obj,
-#         'min_price': min_price,
-#         'max_price': max_price,
-#         'FilterPrice': Filter,
-#         'search_query': search_query,
-#         'products':products,
-#     }
-
-#     return render(request, 'shop.html', data)
 def shop(request):
     category = Category.objects.all()
     all_products = Product.objects.filter(
@@ -369,65 +339,9 @@ def clear_wishlist(request):
 
 from buyer.models import *
 
-# def checkout(request):
-#     if request.user.is_authenticated:
-#         wishlist_items = Wishlist.objects.filter(user=request.user)
-#         products = [item.product for item in wishlist_items]
-#     else:
-#         products = []
-
-#     data = {'products': products}
-
-#     if request.method == "POST":
-#         first_name = request.POST.get("first_name")
-#         last_name = request.POST.get("last_name")
-#         address = request.POST.get("address")
-#         city = request.POST.get("city")
-#         postal_code = request.POST.get("postal_code")
-#         email = request.POST.get("email")
-#         phone = request.POST.get("phone")
-
-   
-#         cart = request.session.get("cart", {})
-#         total_products = len(cart)
-#         product_names = "(---------NEXT_PRODUCT---------)".join([value["product_name"] for value in cart.values()])
-
-       
-#         cart_total_amount = sum(int(value["original_price"]) * int(value["quantity"]) for value in cart.values())
 
 
-#         if cart_total_amount <= 2999:
-#             cart_total_amount += 200 
-
-#         try:
-#             buyer = Buyer.objects.create(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 address=address,
-#                 city=city,
-#                 postal_code=postal_code,
-#                 email=email,
-#                 phone=phone,
-#                 total_products=total_products,
-#                 product_names=product_names,
-#                 total_amount=cart_total_amount  
-#             )
-#             buyer.save()
-
-#             messages.success(request, "Your order has been placed successfully!")
-
-#             # Clear Cart After Order
-#             del request.session["cart"]
-#             request.session.modified = True
-
-#             return redirect("order_success")
-#         except Exception as e:
-#             messages.error(request, "Something went wrong. Please try again.")
-#             print("Error:", e)
-#             return redirect("checkout")
-
-#     return render(request, "checkout.html", data)
-
+@login_required(login_url="/accounts/login/")
 def checkout(request):
     if request.method == "POST":
         first_name = request.POST.get("first_name")
@@ -444,20 +358,23 @@ def checkout(request):
         cart_total_amount = sum(int(value["original_price"]) * int(value["quantity"]) for value in cart.values())
 
         if cart_total_amount <= 2999:
-            cart_total_amount += 200 
+            cart_total_amount += 200  
 
         try:
-            buyer = Buyer.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                address=address,
-                city=city,
-                postal_code=postal_code,
-                email=email,
-                phone=phone,
-                total_products=total_products,
-                product_names=product_names,
-                total_amount=cart_total_amount  
+            buyer, created = Buyer.objects.get_or_create(
+                user=request.user,  # Ensure user is assigned
+                defaults={
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "address": address,
+                    "city": city,
+                    "postal_code": postal_code,
+                    "email": email,
+                    "phone": phone,
+                    "total_products": total_products,
+                    "product_names": product_names,
+                    "total_amount": cart_total_amount  
+                }
             )
 
             order = Order.objects.create(
@@ -487,7 +404,21 @@ def checkout(request):
 
     return render(request, "checkout.html")
 
+
+@login_required(login_url="/accounts/login/")
 def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, "order_success.html", {"order": order})
+
+@login_required(login_url="/accounts/login/")
+def order_tracking(request):
+    buyer = get_object_or_404(Buyer, user=request.user)  # Get Buyer instance
+    orders = Order.objects.filter(buyer=buyer).order_by("-id")  # Get all orders for this buyer
+    return render(request, "order_tracking.html", {"orders": orders})
+
+
+@login_required(login_url="/accounts/login/")
+def order_tracking_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, buyer__user=request.user)
+    return render(request, "order_tracking_detail.html", {"order": order})
 
