@@ -10,7 +10,8 @@ class Buyer(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     total_products = models.IntegerField(default=0)
-    product_names = models.TextField() 
+    product_names = models.TextField()
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

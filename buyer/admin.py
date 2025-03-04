@@ -4,7 +4,7 @@ from django.contrib import admin
 from buyer.models import *
 
 class BuyerAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name", "total_products", "display_product_names")
+    list_display = ("id", "first_name", "last_name", "total_products",'total_amount')
 
     def display_product_names(self, obj):
         names = obj.product_names.replace(",", ", ")  
