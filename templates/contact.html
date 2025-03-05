@@ -1,11 +1,12 @@
 {% extends 'base.html' %} 
+{% load static %}
 {% block content %}
 
 <main>
 
         
         <!-- page-banner-area-start -->
-        <div class="page-banner-area page-banner-height" data-background="/static/assets/img/banner/page-banner-3.jpg">
+        <div class="page-banner-area page-banner-height" data-background="{% static '/assets/img/banner/page-banner-3.jpg' %}">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
@@ -48,7 +49,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-6">
                         <div class="location-item mb-30">
                             <div class="location-image w-img mb-20">
-                                <img src="/static/assets/img/location/location-1.jpg" alt="">
+                                <img src="{% static '/assets/img/location/location-1.jpg' %}" alt="">
                             </div>
                             <h6>26 Rue Pelleport - Paris</h6>
                             <div class="sm-item-loc sm-item-border mb-20">
@@ -83,7 +84,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-6">
                         <div class="location-item mb-30">
                             <div class="location-image w-img mb-20">
-                                <img src="/static/assets/img/location/location-2.jpg" alt="">
+                                <img src="{% static '/assets/img/location/location-2.jpg' %}" alt="">
                             </div>
                             <h6>150 Stanley Rd - London</h6>
                             <div class="sm-item-loc sm-item-border mb-20">
@@ -118,7 +119,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-6">
                         <div class="location-item mb-30">
                             <div class="location-image w-img mb-20">
-                                <img src="/static/assets/img/location/location-3.jpg" alt="">
+                                <img src="{% static '/assets/img/location/location-3.jpg' %}" alt="">
                             </div>
                             <h6>1357 Prospect - New York</h6>
                             <div class="sm-item-loc sm-item-border mb-20">
@@ -153,7 +154,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-6">
                         <div class="location-item mb-30">
                             <div class="location-image w-img mb-20">
-                                <img src="/static/assets/img/location/location-4.jpg" alt="">
+                                <img src="{% static '/assets/img/location/location-4.jpg' %}" alt="">
                             </div>
                             <h6>86 Georgia Rd - Mardrid</h6>
                             <div class="sm-item-loc sm-item-border mb-20">

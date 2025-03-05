@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 
@@ -211,8 +211,8 @@
                 <div class="col-xl-9 col-lg-8">
                     <div class="shop-banner mb-30">
                         <div class="banner-image">
-                            <img class="banner-l" src="/static/assets/img/banner/sl-banner.jpg" alt="">
-                            <img class="banner-sm" src="/static/assets/img/banner/sl-banner-sm.png" alt="">
+                            <img class="banner-l" src="{% static '/assets/img/banner/sl-banner.jpg' %}" alt="">
+                            <img class="banner-sm" src="{% static '/assets/img/banner/sl-banner-sm.png' %}" alt="">
                             <div class="banner-content text-center">
                                 <p class="banner-text mb-30">Hurry Up! <br> Free Shipping All Order Over $99</p>
                                 <a href="shop.html" class="st-btn-d b-radius">Discover now</a>
